@@ -11,18 +11,19 @@ mcp = FastMCP("Hirebase")
 HIREBASE_API_BASE = "https://data.hirebase.org/v0"
 HIREBASE_API_KEY = os.getenv("HIREBASE_API_KEY")
 
+
 def get_hirebase_headers():
     """Get headers for HireBase API requests"""
-    headers = {
-        "Content-Type": "application/json"
-    }
+    headers = {"Content-Type": "application/json"}
     if HIREBASE_API_KEY:
         headers["x-api-key"] = HIREBASE_API_KEY
     return headers
 
+
 @dataclass
 class JobSearchParams:
     """Parameters for job search"""
+
     q: Optional[str] = None
     and_keywords: Optional[List[str]] = None
     or_keywords: Optional[List[str]] = None
@@ -104,6 +105,7 @@ class JobSearchParams:
             params["offset"] = self.offset
         return params
 
+
 @mcp.tool()
 def search_jobs(
     query: Optional[str] = None,
@@ -122,10 +124,10 @@ def search_jobs(
     years_from: Optional[int] = None,
     years_to: Optional[int] = None,
     visa: Optional[bool] = None,
-    limit: Optional[int] = 10
+    limit: Optional[int] = 10,
 ) -> Dict[str, Any]:
     """Search for jobs using the HireBase API
-    
+
     Args:
         query: Full text search query
         and_keywords: Keywords that must all appear in results
@@ -163,47 +165,46 @@ def search_jobs(
             years_from=years_from,
             years_to=years_to,
             visa=visa,
-            limit=limit
+            limit=limit,
         )
-        
+
         response = requests.get(
-            f"{HIREBASE_API_BASE}/jobs",
-            headers=get_hirebase_headers(),
-            params=params.to_params()
+            f"{HIREBASE_API_BASE}/jobs", headers=get_hirebase_headers(), params=params.to_params()
         )
         response.raise_for_status()
         return response.json()
-        
+
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
+
 
 @mcp.tool()
 def get_job(job_id: str) -> Dict[str, Any]:
     """Get detailed information about a specific job
-    
+
     Args:
         job_id: The unique identifier of the job
     """
     try:
         response = requests.get(
-            f"{HIREBASE_API_BASE}/jobs/{job_id}",
-            headers=get_hirebase_headers()
+            f"{HIREBASE_API_BASE}/jobs/{job_id}", headers=get_hirebase_headers()
         )
         response.raise_for_status()
         return response.json()
-        
+
     except requests.exceptions.RequestException as e:
         return {"error": str(e)}
+
 
 @mcp.prompt()
 def create_candidate_profile(
     name: str,
     linkedin_url: Optional[str] = None,
     personal_website: Optional[str] = None,
-    resume_text: Optional[str] = None
+    resume_text: Optional[str] = None,
 ) -> str:
     """Create a prompt to help search for jobs based on candidate profile
-    
+
     Args:
         name: The candidate's name
         linkedin_url: URL to candidate's LinkedIn profile
@@ -213,29 +214,33 @@ def create_candidate_profile(
     prompt_parts = [
         f"I am {name}, a job seeker looking for relevant opportunities.",
     ]
-    
+
     if linkedin_url:
         prompt_parts.append(f"My LinkedIn profile is available at: {linkedin_url}")
-    
+
     if personal_website:
         prompt_parts.append(f"My personal website/portfolio is: {personal_website}")
-    
+
     if resume_text:
         prompt_parts.append("\nHere is my resume content:")
         prompt_parts.append(resume_text)
-    
+
     prompt_parts.append("\nBased on my profile above, please:")
-    prompt_parts.extend([
-        "1. Identify key skills, experience level, and job preferences",
-        "2. Suggest relevant job categories and keywords for searching",
-        "3. Recommend search parameters (location, salary range, etc.)",
-        "4. Create targeted search queries using the HireBase API tools"
-    ])
+    prompt_parts.extend(
+        [
+            "1. Identify key skills, experience level, and job preferences",
+            "2. Suggest relevant job categories and keywords for searching",
+            "3. Recommend search parameters (location, salary range, etc.)",
+            "4. Create targeted search queries using the HireBase API tools",
+        ]
+    )
 
     return "\n".join(prompt_parts)
 
+
 def main():
-    mcp.run() 
+    mcp.run()
+
 
 if __name__ == "__main__":
-    main() 
+    main()
