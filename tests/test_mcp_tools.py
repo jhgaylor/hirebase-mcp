@@ -6,7 +6,7 @@ import pytest
 
 # Import the internal logic functions and constants to be tested
 # We also import the prompt function directly as before
-from src.hirebase_mcp.server import (
+from server import (
     HIREBASE_API_BASE,
     _get_job_logic,
     _search_jobs_logic,
@@ -18,7 +18,7 @@ BASE_URL = HIREBASE_API_BASE
 
 
 @pytest.mark.asyncio
-@patch("src.hirebase_mcp.server.requests.get")  # Patch requests.get in the server module
+@patch("src.server.requests.get")  # Patch requests.get in the server module
 async def test_search_jobs_success(mock_get, monkeypatch):
     """Test successful job search using unittest.mock."""
     monkeypatch.delenv("HIREBASE_API_KEY", raising=False)
@@ -49,7 +49,7 @@ async def test_search_jobs_success(mock_get, monkeypatch):
 
 
 @pytest.mark.asyncio
-@patch("src.hirebase_mcp.server.requests.get")  # Patch requests.get
+@patch("src.server.requests.get")  # Patch requests.get
 async def test_search_jobs_api_error(mock_get, monkeypatch):
     """Test job search API error using unittest.mock."""
     monkeypatch.delenv("HIREBASE_API_KEY", raising=False)
@@ -75,7 +75,7 @@ async def test_search_jobs_api_error(mock_get, monkeypatch):
 
 
 @pytest.mark.asyncio
-@patch("src.hirebase_mcp.server.requests.get")  # Patch requests.get
+@patch("src.server.requests.get")  # Patch requests.get
 async def test_get_job_success(mock_get, monkeypatch):
     """Test successful job retrieval using unittest.mock."""
     monkeypatch.delenv("HIREBASE_API_KEY", raising=False)
@@ -101,7 +101,7 @@ async def test_get_job_success(mock_get, monkeypatch):
 
 
 @pytest.mark.asyncio
-@patch("src.hirebase_mcp.server.requests.get")  # Patch requests.get
+@patch("src.server.requests.get")  # Patch requests.get
 async def test_get_job_not_found(mock_get, monkeypatch):
     """Test job not found (404) using unittest.mock."""
     monkeypatch.delenv("HIREBASE_API_KEY", raising=False)
@@ -125,7 +125,7 @@ async def test_get_job_not_found(mock_get, monkeypatch):
 # Test the prompt function (doesn't need async or mocking)
 def test_create_candidate_profile():
     """Test the create_candidate_profile prompt generation."""
-    # from src.hirebase_mcp.server import create_candidate_profile # Already imported above
+    # from src.server import create_candidate_profile # Already imported above
 
     name = "Test Candidate"
     linkedin = "linkedin.com/test"
