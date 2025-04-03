@@ -245,5 +245,9 @@ def create_candidate_profile(
     return "\n".join(prompt_parts)
 
 
-if __name__ == "__main__":
+def main():
     mcp.run()
+
+
+if __name__ == "__main__":
+    main()
