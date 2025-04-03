@@ -85,11 +85,15 @@ jobs:
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
         echo "$HOME/.local/bin" >> $GITHUB_PATH
+        uv venv
+        source .venv/bin/activate
         uv pip install hatch
       shell: bash
 
     - name: Build package
-      run: hatch build # Uses hatchling backend specified in pyproject.toml
+      run: |
+        source .venv/bin/activate
+        hatch build # Uses hatchling backend specified in pyproject.toml
 
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
