@@ -4,34 +4,6 @@ A Model Context Protocol (MCP) server providing tools to interact with the HireB
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
-
-- MCP Tools for searching jobs (`search_jobs`) and retrieving job details (`get_job`) from the HireBase API.
-- MCP Prompt (`create_candidate_profile`) to assist in generating job search strategies.
-
-## Setup
-
-1. Install `uv` if you haven't already:
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-2. Create a new virtual environment and install dependencies:
-```bash
-uv venv
-source .venv/bin/activate  # On Unix/macOS
-
-# Install dependencies
-uv pip install -e .
-```
-
-## Running the Server
-
-Start the server with:
-```bash
-python -m mcp_server
-```
-
 ## Available MCP Interactions
 
 This server exposes the following MCP interactions:
@@ -47,26 +19,6 @@ This server exposes the following MCP interactions:
 
 *   `create_candidate_profile`: Generates a structured prompt based on candidate details (name, LinkedIn, website, resume text) to help guide job searching.
     *   *Parameters*: `name`, `linkedin_url`, `personal_website`, `resume_text`.
-
-## Development
-
-This project uses:
-- `uv` for dependency management and virtual environments
-- `ruff` for linting and formatting
-- `hatch` as the build backend
-
-### Common Tasks
-
-```bash
-# Update dependencies
-uv pip compile pyproject.toml -o requirements.txt
-
-# Run linting
-ruff check .
-
-# Format code
-ruff format .
-```
 
 ## Client Setup (Examples: Claude Desktop, Cursor)
 
@@ -125,6 +77,26 @@ To use this server with an MCP client like Claude Desktop or Cursor, you need to
 
 *Replace `"your-hirebase-api-key-here"` with your actual HireBase API key.*
 *Adjust the package name (`hirebase-mcp`) or paths if necessary based on your project setup.*
+
+## Development
+
+This project uses:
+- `uv` for dependency management and virtual environments
+- `ruff` for linting and formatting
+- `hatch` as the build backend
+
+### Common Tasks
+
+```bash
+# Update dependencies
+uv pip compile pyproject.toml -o requirements.txt
+
+# Run linting
+ruff check .
+
+# Format code
+ruff format .
+```
 
 ## Environment Variables
 
