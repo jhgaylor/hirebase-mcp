@@ -1,8 +1,9 @@
-from mcp.server.fastmcp import FastMCP
 import os
-import requests
-from typing import Optional, List, Dict, Any
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
+
+import requests
+from mcp.server.fastmcp import FastMCP
 
 # Create a FastMCP server instance named "Hirebase"
 mcp = FastMCP("Hirebase")
@@ -18,30 +19,6 @@ def get_hirebase_headers():
     if HIREBASE_API_KEY:
         headers["x-api-key"] = HIREBASE_API_KEY
     return headers
-
-
-def _search_jobs_logic(**kwargs) -> Dict[str, Any]:
-    """Internal logic for searching jobs via HireBase API."""
-    print("--- DEBUG: Entering _search_jobs_logic ---")
-    try:
-        # Create JobSearchParams from kwargs
-        search_params_obj = JobSearchParams(**kwargs)
-
-        response = requests.get(
-            f"{HIREBASE_API_BASE}/jobs",
-            headers=get_hirebase_headers(),
-            params=search_params_obj.to_params(),
-        )
-        response.raise_for_status()
-        return response.json()
-
-    except requests.exceptions.RequestException as e:
-        # Log the error or handle it as needed
-        # print(f"HireBase API Error: {e}") # Example logging
-        return {"error": str(e)}
-    except TypeError as e:
-        # Handle cases where kwargs don't match JobSearchParams
-        return {"error": f"Invalid search parameter: {e}"}
 
 
 @dataclass
@@ -130,6 +107,33 @@ class JobSearchParams:
         return params
 
 
+def _search_jobs_logic(**kwargs) -> Dict[str, Any]:
+    """Internal logic for searching jobs via HireBase API."""
+    print("--- DEBUG: Entering _search_jobs_logic ---")
+    try:
+        # Create JobSearchParams from kwargs
+        if "query" in kwargs:
+            kwargs["q"] = kwargs["query"]
+            del kwargs["query"]
+        search_params_obj = JobSearchParams(**kwargs)
+
+        response = requests.get(
+            f"{HIREBASE_API_BASE}/jobs",
+            headers=get_hirebase_headers(),
+            params=search_params_obj.to_params(),
+        )
+        response.raise_for_status()
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        # Log the error or handle it as needed
+        # print(f"HireBase API Error: {e}") # Example logging
+        return {"error": str(e)}
+    except TypeError as e:
+        # Handle cases where kwargs don't match JobSearchParams
+        return {"error": f"Invalid search parameter: {e}"}
+
+
 @mcp.tool()
 def search_jobs(
     query: Optional[str] = None,
@@ -171,35 +175,10 @@ def search_jobs(
         visa: Whether job offers visa sponsorship
         limit: Maximum number of results to return
     """
-    try:
-        params = JobSearchParams(
-            q=query,
-            and_keywords=and_keywords,
-            or_keywords=or_keywords,
-            not_keywords=not_keywords,
-            title=title,
-            category=category,
-            country=country,
-            city=city,
-            location_type=location_type,
-            company=company,
-            salary_from=salary_from,
-            salary_to=salary_to,
-            salary_currency=salary_currency,
-            years_from=years_from,
-            years_to=years_to,
-            visa=visa,
-            limit=limit,
-        )
-
-        response = requests.get(
-            f"{HIREBASE_API_BASE}/jobs", headers=get_hirebase_headers(), params=params.to_params()
-        )
-        response.raise_for_status()
-        return response.json()
-
-    except requests.exceptions.RequestException as e:
-        return {"error": str(e)}
+    # Pass all arguments to the internal logic function
+    # Use locals() to capture all passed arguments
+    args = locals()
+    return _search_jobs_logic(**args)
 
 
 def _get_job_logic(job_id: str) -> Dict[str, Any]:
@@ -224,7 +203,7 @@ def get_job(job_id: str) -> Dict[str, Any]:
     Args:
         job_id: The unique identifier of the job
     """
-    _get_job_logic(job_id)
+    return _get_job_logic(job_id=job_id)
 
 
 @mcp.prompt()
