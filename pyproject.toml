@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hirebase-mcp"
-version = "1.0.11"
+version = "1.0.12"
 description = "HireBase MCP Server"
 authors = [
     {name = "Jake Gaylor", email = "jhgaylor@gmail.com"},
@@ -41,7 +41,7 @@ Repository = "https://github.com/jhgaylor/hirebase-mcp" # Replace with actual UR
 "Bug Tracker" = "https://github.com/jhgaylor/hirebase-mcp/issues" # Replace with actual URL
 
 [project.scripts]
-hirebase-mcp = "src.server:main"
+hirebase-mcp = "src:main"
 
 [tool.ruff]
 line-length = 100
