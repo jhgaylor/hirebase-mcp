@@ -40,6 +40,9 @@ Homepage = "https://github.com/jhgaylor/hirebase-mcp" # Replace with actual URL
 Repository = "https://github.com/jhgaylor/hirebase-mcp" # Replace with actual URL
 "Bug Tracker" = "https://github.com/jhgaylor/hirebase-mcp/issues" # Replace with actual URL
 
+[project.scripts]
+hirebase-mcp = "hirebase_mcp.__main__:main"
+
 [tool.ruff]
 line-length = 100
 target-version = "py310"

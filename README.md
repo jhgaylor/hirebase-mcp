@@ -67,7 +67,7 @@ To use this server with an MCP client like Claude Desktop or Cursor, you need to
                         "requests",
                         "mcp",
                         "run",
-                        "PATH_TO_REPO/src/server.py"
+                        "PATH_TO_REPO/src/hirebase_mcp/server.py"
                     ]
                 }
             }
