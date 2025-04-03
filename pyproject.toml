@@ -33,7 +33,6 @@ test = [
     "pytest-asyncio",     # For testing async code
     "httpx",              # For testing FastAPI endpoints (if server tests are re-added)
     "websockets",         # Needed for potential WebSocket tests
-    "unittest.mock"       # Technically built-in, but good to note
 ]
 
 [project.urls]
