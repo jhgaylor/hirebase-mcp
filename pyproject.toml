@@ -6,15 +6,44 @@ build-backend = "hatchling.build"
 name = "hirebase-mcp"
 version = "0.1.0"
 description = "HireBase MCP Server"
+authors = [
+    {name = "Jake Gaylor", email = "jhgaylor@gmail.com"},
+]
+license = {text = "MIT"}
+readme = "README.md"  # Assuming you have a README.md
 requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+]
 dependencies = [
     "requests",
     "mcp[cli]",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest >= 7.0",       # Test runner
+    "pytest-asyncio",     # For testing async code
+    "httpx",              # For testing FastAPI endpoints (if server tests are re-added)
+    "websockets",         # Needed for potential WebSocket tests
+    "unittest.mock"       # Technically built-in, but good to note
+]
+
+[project.urls]
+Homepage = "https://github.com/jhgaylor/hirebase-mcp" # Replace with actual URL
+Repository = "https://github.com/jhgaylor/hirebase-mcp" # Replace with actual URL
+"Bug Tracker" = "https://github.com/jhgaylor/hirebase-mcp/issues" # Replace with actual URL
+
 [tool.ruff]
 line-length = 100
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = [
