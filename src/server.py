@@ -112,10 +112,11 @@ def _search_jobs_logic(**kwargs) -> Dict[str, Any]:
     print("--- DEBUG: Entering _search_jobs_logic ---")
     try:
         # Create JobSearchParams from kwargs
-        if "query" in kwargs:
-            kwargs["q"] = kwargs["query"]
-            del kwargs["query"]
-        search_params_obj = JobSearchParams(**kwargs)
+        kwargs_copy = kwargs.copy()
+        if "query" in kwargs_copy:
+            kwargs_copy["q"] = kwargs_copy.pop("query")
+
+        search_params_obj = JobSearchParams(**kwargs_copy)
 
         response = requests.get(
             f"{HIREBASE_API_BASE}/jobs",
