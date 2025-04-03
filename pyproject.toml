@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hirebase-mcp"
-version = "1.0.9"
+version = "1.0.10"
 description = "HireBase MCP Server"
 authors = [
     {name = "Jake Gaylor", email = "jhgaylor@gmail.com"},

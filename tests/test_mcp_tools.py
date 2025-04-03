@@ -6,7 +6,7 @@ import pytest
 
 # Import the internal logic functions and constants to be tested
 # We also import the prompt function directly as before
-from server import (
+from src.server import (
     HIREBASE_API_BASE,
     _get_job_logic,
     _search_jobs_logic,
