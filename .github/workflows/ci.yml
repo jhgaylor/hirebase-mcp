@@ -1,17 +1,18 @@
-name: Python CI
+name: Python CI + Release
 
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*' # Trigger on version tags like v1.0, v2.1.3
   pull_request:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: read # Default needed for checkout
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,7 +32,7 @@ jobs:
     - name: Install uv
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
       shell: bash
 
     - name: Install dependencies
@@ -39,7 +40,7 @@ jobs:
         uv venv # Create virtual environment
         source .venv/bin/activate
         uv pip install -e '.[test]'
-        uv pip install ruff pytest # Ensure tools are available in CI venv
+        uv pip install ruff pytest hatch # Ensure build tool is available
       shell: bash
 
     - name: Lint with Ruff
@@ -58,4 +59,38 @@ jobs:
       run: |
         source .venv/bin/activate
         pytest
-      shell: bash 
+      shell: bash
+
+  publish:
+    name: Publish to PyPI
+    needs: [build] # Run only after the build job succeeds
+    runs-on: ubuntu-latest
+    # Run only on tagged commits
+    if: startsWith(github.ref, 'refs/tags/')
+
+    permissions:
+      # IMPORTANT: mandatory for trusted publishing
+      id-token: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10" # Use a specific Python version
+
+    - name: Install uv and Hatch
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        uv pip install hatch
+      shell: bash
+
+    - name: Build package
+      run: hatch build # Uses hatchling backend specified in pyproject.toml
+
+    - name: Publish package distributions to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      # Trusted publishing automatically uses OIDC, no API token needed 
