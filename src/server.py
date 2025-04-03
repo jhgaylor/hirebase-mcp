@@ -20,6 +20,30 @@ def get_hirebase_headers():
     return headers
 
 
+def _search_jobs_logic(**kwargs) -> Dict[str, Any]:
+    """Internal logic for searching jobs via HireBase API."""
+    print("--- DEBUG: Entering _search_jobs_logic ---")
+    try:
+        # Create JobSearchParams from kwargs
+        search_params_obj = JobSearchParams(**kwargs)
+
+        response = requests.get(
+            f"{HIREBASE_API_BASE}/jobs",
+            headers=get_hirebase_headers(),
+            params=search_params_obj.to_params(),
+        )
+        response.raise_for_status()
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        # Log the error or handle it as needed
+        # print(f"HireBase API Error: {e}") # Example logging
+        return {"error": str(e)}
+    except TypeError as e:
+        # Handle cases where kwargs don't match JobSearchParams
+        return {"error": f"Invalid search parameter: {e}"}
+
+
 @dataclass
 class JobSearchParams:
     """Parameters for job search"""
@@ -178,13 +202,8 @@ def search_jobs(
         return {"error": str(e)}
 
 
-@mcp.tool()
-def get_job(job_id: str) -> Dict[str, Any]:
-    """Get detailed information about a specific job
-
-    Args:
-        job_id: The unique identifier of the job
-    """
+def _get_job_logic(job_id: str) -> Dict[str, Any]:
+    """Internal logic for retrieving a specific job via HireBase API."""
     try:
         response = requests.get(
             f"{HIREBASE_API_BASE}/jobs/{job_id}", headers=get_hirebase_headers()
@@ -193,7 +212,19 @@ def get_job(job_id: str) -> Dict[str, Any]:
         return response.json()
 
     except requests.exceptions.RequestException as e:
+        # Log the error or handle it as needed
+        # print(f"HireBase API Error: {e}") # Example logging
         return {"error": str(e)}
+
+
+@mcp.tool()
+def get_job(job_id: str) -> Dict[str, Any]:
+    """Get detailed information about a specific job
+
+    Args:
+        job_id: The unique identifier of the job
+    """
+    _get_job_logic(job_id)
 
 
 @mcp.prompt()
