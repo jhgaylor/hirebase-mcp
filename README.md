@@ -24,28 +24,24 @@ This server exposes the following MCP interactions:
 
 To use this server with an MCP client like Claude Desktop or Cursor, you need to configure the client to run the server process and optionally provide the HireBase API key.
 
-1.  **Ensure `uv` is installed:** See [Setup](#setup).
-2.  **Obtain a HireBase API Key (optional):** Request a key from [HireBase](https://hirebase.org/) You can set this as an environment variable (`HIREBASE_API_KEY`).
+1.  **Ensure `uv` is installed:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
+2.  **Obtain a HireBase API Key (optional):** Request a key from [HireBase](https://hirebase.org/) You can set this as an environment variable (`HIREBASE_API_KEY`) or just leave it empty.
 3.  **Configure your client:**
 
-    *   **Using `uvx` (Recommended for simplicity):**
+    *   **Using `uvx`:**
         *   **Claude Desktop:** Edit your `claude_desktop_config.json`:
             ```json
             {
               "mcpServers": {
-                "hirebase": { // Choose a name for the server
+                "hirebase": {
                   "command": "uvx",
                   "args": [
-                    // Assuming your package is named 'hirebase-mcp'
-                    // If you haven't published it, you might need to point to the local path
-                    // e.g., "--path", "." if running from the project root
                     "hirebase-mcp" 
                   ],
                   "env": {
-                    "HIREBASE_API_KEY": "your-hirebase-api-key-here" 
+                    "HIREBASE_API_KEY": "" 
                   }
                 }
-                // ... other servers
               }
             }
             ```
@@ -56,27 +52,28 @@ To use this server with an MCP client like Claude Desktop or Cursor, you need to
             *   Set the `HIREBASE_API_KEY` environment variable in the appropriate section.
 
     *   **Running from source via Python (Alternative):**
-        *   This requires the environment to be set up as per the [Setup](#setup) section.
-        *   **Claude Desktop:** Edit your `claude_desktop_config.json`:
-            ```json
-            {
-              "mcpServers": {
-                "hirebase": { 
-                  "command": "python", 
-                  "args": [
-                    "-m", "mcp_server" // Assumes running from the project root
-                  ],
-                  "env": {
-                    "HIREBASE_API_KEY": "your-hirebase-api-key-here" 
-                  }
+        1. Clone the repo and note where you clone it to
+        2. **Claude Desktop:** Edit your `claude_desktop_config.json`:
+        ```
+        {
+            "mcpServers": {
+                "hirebase": {
+                    "command": "uv",
+                    "args": [
+                        "run",
+                        "--with",
+                        "mcp[cli]",
+                        "--with",
+                        "requests",
+                        "mcp",
+                        "run",
+                        "PATH_TO_REPO/src/server.py"
+                    ]
                 }
-                // ... other servers
-              }
             }
-            ```
+        }
+        ```
 
-*Replace `"your-hirebase-api-key-here"` with your actual HireBase API key.*
-*Adjust the package name (`hirebase-mcp`) or paths if necessary based on your project setup.*
 
 ## Development
 
@@ -88,8 +85,14 @@ This project uses:
 ### Common Tasks
 
 ```bash
-# Update dependencies
-uv pip compile pyproject.toml -o requirements.txt
+# Setup virtual env
+uv venv
+
+# Install dependencies
+uv pip install -e .
+
+# install cli tools
+uv tool install ruff
 
 # Run linting
 ruff check .
