@@ -75,3 +75,10 @@ Thumbs.db
 
 # uv specific
 .uv/ 
+
+# PyInstaller
+*.spec
+*.spec.py
+*.spec.pyc
+*.spec.pyo
+*.spec.pyd

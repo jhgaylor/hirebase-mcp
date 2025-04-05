@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hirebase-mcp"
-version = "1.0.16"
+version = "1.0.17"
 description = "HireBase MCP Server"
 authors = [
     {name = "Jake Gaylor", email = "jhgaylor@gmail.com"},
@@ -33,6 +33,9 @@ test = [
     "pytest-asyncio",     # For testing async code
     "httpx",              # For testing FastAPI endpoints (if server tests are re-added)
     "websockets",         # Needed for potential WebSocket tests
+]
+dev = [
+    "pyinstaller",        # For creating binary distributions
 ]
 
 [project.urls]

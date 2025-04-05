@@ -1,8 +1,8 @@
 """HireBase MCP Server package."""
 
-__version__ = "1.0.16"
+__version__ = "1.0.17"
 
-from .server import main
+from src.server import main
 
 if __name__ == "__main__":
     main()
