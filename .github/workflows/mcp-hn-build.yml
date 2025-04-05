@@ -1,0 +1,83 @@
+name: Build mcp-hn Executables
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-mcp-hn-executables:
+    name: Build mcp-hn Executables
+    # We don't set 'needs' as this is a standalone workflow for now
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false # Allow other jobs to continue if one fails
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-13] # Simplified OS list for example, adjust as needed
+        include:
+          - os: windows-latest
+            exe_name: mcp-hn-windows-x64
+            python_arch: x64
+          - os: ubuntu-latest
+            exe_name: mcp-hn-linux-x64
+            python_arch: x64
+          # Add ARM builds if needed and runners are available
+          # - os: ubuntu-22.04-arm # Example ARM, may need specific runner
+          #   exe_name: mcp-hn-linux-arm64
+          #   python_arch: arm64
+          - os: macos-latest # Assumes latest macOS runner is ARM64
+            exe_name: mcp-hn-macos-arm64
+            python_arch: arm64
+          - os: macos-13 # Assumes macOS 13 runner is x64
+            exe_name: mcp-hn-macos-x64
+            python_arch: x64
+
+    permissions:
+      contents: read # Read permission is sufficient for checkout and build
+
+    steps:
+      - name: Checkout mcp-hn repository
+        uses: actions/checkout@v4
+        with:
+          repository: erithwik/mcp-hn
+          # No 'path' specified, checks out to the root of the workspace
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12" # Match the original job's Python version
+          architecture: ${{ matrix.python_arch }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v1 # Use v1 of the action
+        # No version pinning or caching specified for simplicity, can be added
+
+      - name: Install dependencies
+        run: |
+          # Assuming mcp-hn uses uv and pyproject.toml similarly
+          uv sync --all-extras --dev
+          uv pip install . # Install the checked-out project
+        shell: bash
+
+      - name: Create PyInstaller Package
+        uses: sayyid5416/pyinstaller@v1
+        with:
+          # --- ADJUSTED ---
+          # Assuming the main entry point is src/mcp_hn/__main__.py or similar
+          # This might need adjustment based on mcp-hn's actual structure/entry point spec in pyproject.toml
+          spec: src/mcp_hn/__init__.py
+          python_ver: '3.12'
+          python_arch: ${{ matrix.python_arch }}
+          # --- ADJUSTED ---
+          # Adjust name, add data from the correct source path
+          options: --onefile, --name ${{ matrix.exe_name }}, --add-data "src/mcp_hn:mcp_hn"
+          # --- ADJUSTED ---
+          # Upload artifact with the specific name
+          upload_exe_with_name: ${{ matrix.exe_name }}
+          # Specify the artifact name for upload clarity
+          artifact_name: ${{ matrix.exe_name }}
+
+      # Optional: Upload artifact step if not handled by pyinstaller action directly
+      # - name: Upload Executable Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ matrix.exe_name }}
+      #     path: dist/${{ matrix.exe_name }} # Adjust path based on pyinstaller output 
