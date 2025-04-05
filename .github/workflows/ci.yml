@@ -149,13 +149,6 @@ jobs:
           options: --onefile, --name ${{ matrix.exe_name }}, --paths=src, --add-data "src:src"
           upload_exe_with_name: ${{ matrix.exe_name }}
 
-      - name: Upload executable as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.exe_name }}
-          path: dist/${{ matrix.exe_name }}*
-          retention-days: 7
-
   create-release:
     name: Create GitHub Release
     needs: [build-executables]
