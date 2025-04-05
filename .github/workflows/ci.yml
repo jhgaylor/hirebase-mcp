@@ -106,14 +106,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, ubuntu-22.04-arm, macos-latest, macos-13]
         include:
           # - os: windows-latest
           #   exe_name: hirebase-mcp-windows
           - os: ubuntu-latest
-            exe_name: hirebase-mcp-linux
+            exe_name: hirebase-mcp-linux-x64
+          - os: ubuntu-22.04-arm
+            exe_name: hirebase-mcp-linux-arm64
           - os: macos-latest
-            exe_name: hirebase-mcp-macos
+            exe_name: hirebase-mcp-macos-arm64
+          - os: macos-13
+            exe_name: hirebase-mcp-macos-x64
 
     permissions:
       contents: read
