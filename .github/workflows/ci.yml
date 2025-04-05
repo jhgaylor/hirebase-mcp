@@ -30,34 +30,29 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install uv
-      uses: astral-sh/setup-uv@v1 # Use the setup-uv action
+      uses: astral-sh/setup-uv@v5 # Use v5 of the action
       with:
-        uv-version: latest # Or specify a version
+        version: "0.6.12" # Pin uv version (example from docs)
+        enable-cache: true # Enable caching
+        cache-dependency-glob: "pyproject.toml" # Invalidate cache on pyproject changes
 
-    - name: Install dependencies
+    - name: Install dependencies and project
       run: |
-        uv venv # Create virtual environment
-        source .venv/bin/activate
-        uv pip install -e '.[test]'
-        uv pip install ruff pytest hatch # Ensure build tool is available
+        uv sync --all-extras --dev # Sync dev dependencies and extras
+        uv pip install -e . # Install the project itself
+        uv pip install ruff pytest hatch # Install tools explicitly
       shell: bash
 
     - name: Lint with Ruff
-      run: |
-        source .venv/bin/activate
-        ruff check .
+      run: uv run ruff check . # Use uv run
       shell: bash
 
     - name: Check formatting with Ruff
-      run: |
-        source .venv/bin/activate
-        ruff format . --check
+      run: uv run ruff format . --check # Use uv run
       shell: bash
 
     - name: Test with pytest
-      run: |
-        source .venv/bin/activate
-        pytest
+      run: uv run pytest # Use uv run
       shell: bash
 
   publish:
@@ -81,21 +76,20 @@ jobs:
         python-version: "3.10" # Use a specific Python version
 
     - name: Install uv and Hatch
-      uses: astral-sh/setup-uv@v1 # Use the setup-uv action
+      uses: astral-sh/setup-uv@v5 # Use v5 of the action
       with:
-        uv-version: latest
-    - name: Install Hatch
+        version: "0.6.12" # Pin uv version
+
+    - name: Install dependencies and Hatch
       run: |
-        # uv should be available from the previous step
-        uv venv # Still need to create venv
-        source .venv/bin/activate
-        uv pip install hatch
+        uv sync --dev # Sync dev dependencies
+        uv pip install -e . # Install the project itself
+        uv pip install hatch # Install hatch
       shell: bash
 
     - name: Build package
-      run: |
-        source .venv/bin/activate
-        hatch build # Uses hatchling backend specified in pyproject.toml
+      run: uv run hatch build # Use uv run, Uses hatchling backend specified in pyproject.toml
+      shell: bash
 
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
@@ -139,15 +133,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v1 # Use the setup-uv action
+        uses: astral-sh/setup-uv@v5 # Use v5 of the action
         with:
-          uv-version: latest
+          version: "0.6.12" # Pin uv version
 
       - name: Install dependencies
         run: |
-          uv venv
-          source .venv/bin/activate || . .venv/bin/activate || .venv\Scripts\activate
-          uv pip install -e '.[dev]'
+          uv sync --all-extras --dev # Sync dev dependencies and extras
+          uv pip install -e . # Install the project itself
         shell: bash
 
       - name: Create PyInstaller Package
