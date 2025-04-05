@@ -108,12 +108,12 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
         include:
-          - os: windows-latest
-            exe_name: hirebase-mcp-windows
+          # - os: windows-latest
+          #   exe_name: hirebase-mcp-windows
           - os: ubuntu-latest
             exe_name: hirebase-mcp-linux
-          - os: macos-latest
-            exe_name: hirebase-mcp-macos
+          # - os: macos-latest
+          #   exe_name: hirebase-mcp-macos
 
     permissions:
       contents: read
