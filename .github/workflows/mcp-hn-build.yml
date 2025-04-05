@@ -55,7 +55,7 @@ jobs:
           # --- ADJUSTED ---
           # Assuming the main entry point is src/mcp_hn/__main__.py or similar
           # This might need adjustment based on mcp-hn's actual structure/entry point spec in pyproject.toml
-          spec: src/mcp_hn/__init__.py
+          spec: mcp_hn/__init__.py
           python_ver: '3.12'
           python_arch: ${{ matrix.python_arch }}
           # --- ADJUSTED ---
