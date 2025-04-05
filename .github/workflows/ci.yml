@@ -112,12 +112,16 @@ jobs:
           #   exe_name: hirebase-mcp-windows
           - os: ubuntu-latest
             exe_name: hirebase-mcp-linux-x64
+            python_arch: x64
           - os: ubuntu-22.04-arm
             exe_name: hirebase-mcp-linux-arm64
+            python_arch: arm64
           - os: macos-latest
             exe_name: hirebase-mcp-macos-arm64
+            python_arch: arm64
           - os: macos-13
             exe_name: hirebase-mcp-macos-x64
+            python_arch: x64
 
     permissions:
       contents: read
@@ -150,6 +154,7 @@ jobs:
         with:
           spec: src/__init__.py
           python_ver: '3.12'
+          python_arch: ${{ matrix.python_arch }}
           options: --onefile, --name ${{ matrix.exe_name }}, --paths=src, --add-data "src:src"
           upload_exe_with_name: ${{ matrix.exe_name }}
 
