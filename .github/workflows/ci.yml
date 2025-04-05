@@ -149,7 +149,7 @@ jobs:
           spec: src/__init__.py
           python_ver: '3.12'
           python_arch: ${{ matrix.python_arch }}
-          options: --onefile, --name ${{ matrix.exe_name }}, --paths=src, --add-data "src:src"
+          options: --onefile, --name ${{ matrix.exe_name }}, --add-data "src:src"
           upload_exe_with_name: ${{ matrix.exe_name }}
 
   create-release:

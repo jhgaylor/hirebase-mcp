@@ -31,7 +31,7 @@ test: venv
 
 # Build the binary using PyInstaller
 build: install-dev
-	. $(VENV_DIR)/bin/activate && $(PYTHON) -m PyInstaller --name=$(APP_NAME) --onefile --paths=$(SRC_DIR) --add-data="$(SRC_DIR):src" $(SRC_DIR)/__init__.py
+	. $(VENV_DIR)/bin/activate && $(PYTHON) -m PyInstaller --name=$(APP_NAME) --onefile --add-data="$(SRC_DIR):src" $(SRC_DIR)/__init__.py
 
 # Clean build artifacts
 clean:
