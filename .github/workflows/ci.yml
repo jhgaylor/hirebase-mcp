@@ -141,17 +141,10 @@ jobs:
           uv pip install pyinstaller
         shell: bash
 
-      - name: Create requirements.txt for PyInstaller
-        run: |
-          source .venv/bin/activate || . .venv/bin/activate || .venv\Scripts\activate
-          pip freeze > requirements.txt
-        shell: bash
-
       - name: Create PyInstaller Package
         uses: sayyid5416/pyinstaller@v1
         with:
           spec: src/__init__.py
-          requirements: requirements.txt
           python_ver: '3.10'
           options: --onefile, --name ${{ matrix.exe_name }}, --paths=src, --add-data "src:src"
           upload_exe_with_name: ${{ matrix.exe_name }}
