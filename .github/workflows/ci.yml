@@ -178,5 +178,7 @@ jobs:
           prerelease: false
           files: |
             artifacts/hirebase-mcp-windows/*
-            artifacts/hirebase-mcp-linux/*
-            artifacts/hirebase-mcp-macos/* 
+            artifacts/hirebase-mcp-linux-x64/*
+            artifacts/hirebase-mcp-linux-arm64/*
+            artifacts/hirebase-mcp-macos-arm64/*
+            artifacts/hirebase-mcp-macos-x64/* 
