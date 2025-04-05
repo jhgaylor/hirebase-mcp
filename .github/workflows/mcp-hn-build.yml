@@ -44,6 +44,8 @@ jobs:
           uv sync --all-extras --dev
           uv pip install . # Install the checked-out project
           ls -lsa 
+          ls -lsa src/
+          ls -lsa src/mcp_hn/
           pwd
         shell: bash
 
