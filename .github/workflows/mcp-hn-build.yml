@@ -11,24 +11,12 @@ jobs:
     strategy:
       fail-fast: false # Allow other jobs to continue if one fails
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest, macos-13] # Simplified OS list for example, adjust as needed
+        os: [ubuntu-latest] # Simplified OS list for example, adjust as needed
         include:
-          - os: windows-latest
-            exe_name: mcp-hn-windows-x64
-            python_arch: x64
           - os: ubuntu-latest
             exe_name: mcp-hn-linux-x64
             python_arch: x64
-          # Add ARM builds if needed and runners are available
-          # - os: ubuntu-22.04-arm # Example ARM, may need specific runner
-          #   exe_name: mcp-hn-linux-arm64
-          #   python_arch: arm64
-          - os: macos-latest # Assumes latest macOS runner is ARM64
-            exe_name: mcp-hn-macos-arm64
-            python_arch: arm64
-          - os: macos-13 # Assumes macOS 13 runner is x64
-            exe_name: mcp-hn-macos-x64
-            python_arch: x64
+
 
     permissions:
       contents: read # Read permission is sufficient for checkout and build
@@ -55,6 +43,8 @@ jobs:
           # Assuming mcp-hn uses uv and pyproject.toml similarly
           uv sync --all-extras --dev
           uv pip install . # Install the checked-out project
+          ls -lsa 
+          pwd
         shell: bash
 
       - name: Create PyInstaller Package
