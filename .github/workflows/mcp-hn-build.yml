@@ -64,8 +64,7 @@ jobs:
           # --- ADJUSTED ---
           # Upload artifact with the specific name
           upload_exe_with_name: ${{ matrix.exe_name }}
-          # Specify the artifact name for upload clarity
-          artifact_name: ${{ matrix.exe_name }}
+          clean_checkout: false
 
       # Optional: Upload artifact step if not handled by pyinstaller action directly
       # - name: Upload Executable Artifact
