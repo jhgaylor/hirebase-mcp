@@ -55,7 +55,7 @@ jobs:
           # --- ADJUSTED ---
           # Assuming the main entry point is src/mcp_hn/__main__.py or similar
           # This might need adjustment based on mcp-hn's actual structure/entry point spec in pyproject.toml
-          spec: mcp_hn/__init__.py
+          spec: src/mcp_hn/__init__.py
           python_ver: '3.12'
           python_arch: ${{ matrix.python_arch }}
           # --- ADJUSTED ---
@@ -64,7 +64,6 @@ jobs:
           # --- ADJUSTED ---
           # Upload artifact with the specific name
           upload_exe_with_name: ${{ matrix.exe_name }}
-          clean_checkout: false
 
       # Optional: Upload artifact step if not handled by pyinstaller action directly
       # - name: Upload Executable Artifact
